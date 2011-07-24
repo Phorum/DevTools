@@ -1,0 +1,26 @@
+Phorum development tools
+----------------------------------------------------------------------
+
+This repository holds tools that are useful to Phorum coders.
+Currently, only one finished tool is available, but there will be
+more in the future.
+
+ * build_phorum_module
+
+   This tool prepares a Phorum module for distribution. It reads
+   the info from the info.txt file and uses that for building
+   the distribution packages (in zip and tar.gz format).
+
+   Documentation files for the module (README, INSTALL, UPGRADE,
+   COPYING, AUTHORS, NEWS, ChangeLog, Changelog, info.txt) can
+   contain some special tags that area replaced with real
+   data by the build_phorum_module tool:
+
+   @VERSION@      version from info.txt
+   @MODULE_ID@    the module name as used at the filesystem level
+                  (mods/<id>/<id>.php)
+   @PACKAGE@      the same as @MODULE_ID@-@VERSION@
+   @TITLE@        the title from info.txt
+   @DESCRIPTION@  the description from info.txt, word wrapped at 72 chars,
+                  stripped HTML tags
+
