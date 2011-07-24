@@ -1,0 +1,98 @@
+#!/usr/bin/env php
+<?php
+
+require_once dirname(__FILE__) . '/../lib/Phorum/ModuleBuilder.php';
+
+// ----------------------------------------------------------------------
+// Parse arguments
+// ----------------------------------------------------------------------
+
+$args = array();
+
+$verbose   = FALSE;
+$build_dir = "/tmp";
+
+for ($i = 1; $i < $_SERVER['argc']; $i++)
+{
+    $opt = $_SERVER['argv'][$i];
+
+    // Gather non-options.
+    if ($opt[0] != '-') {
+        $args[] = $opt;
+        continue;
+    }
+
+    // Process options.
+    switch ($opt)
+    {
+        case "-h":
+            usage();
+            exit;
+            break;
+
+        case "-v":
+            $verbose = TRUE;
+            break;
+
+        case "-b":
+            if (!isset($_SERVER['argv'][++$i])) {
+                die("Missing value for option -b!\n");
+            }
+            $build_dir = $_SERVER['argv'][$i];
+            break;
+
+        default:
+            die("Unknown option: $opt\n");
+    }
+}
+
+$count = count($args);
+switch ($count)
+{
+    case 0  : $module_dir = getcwd(); break;
+    case 1  : $module_dir = $args[0]; break;
+    default : die("Only one module dir expected, but got $count!\n");
+}
+
+// ----------------------------------------------------------------------
+// Generate the module package
+// ----------------------------------------------------------------------
+
+try
+{
+    $builder = new Phorum_ModuleBuilder($module_dir, $build_dir);
+    if ($verbose) $builder->enableScreenLogger();
+    $output = $builder->build();
+    if (!$verbose) {
+        print "Package archives created:\n";
+        foreach ($output as $file) {
+            print "> $file\n";
+        }
+    }
+}
+catch (Exception $e)
+{
+    die("Error: " . $e->getMessage() . "\n");
+}
+
+// ----------------------------------------------------------------------
+// Utility functions
+// ----------------------------------------------------------------------
+
+function usage()
+{
+    $program = basename($_SERVER['argv'][0]);
+
+    print "\n";
+    print "Usage: $program [OPTIONS] [MODULE DIR]\n";
+    print "\n";
+    print "   -h           : Show this help.\n";
+    print "   -v           : Enable verbose output.\n";
+    print "   -b <path>    : The working directory for building the module\n";
+    print "                  package. By default, /tmp is used.\n";
+    print "\n";
+    print "   MODULE DIR   : The path to the Phorum module for which to\n";
+    print "                  build a distribution package. By default,\n";
+    print "                  the active working directory is used.\n";
+    print "\n";
+}
