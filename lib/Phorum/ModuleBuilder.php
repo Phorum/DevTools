@@ -95,12 +95,18 @@ class Phorum_ModuleBuilder extends Phorum_PackageBuilder
 
     protected function _substituteTags($data)
     {
-        $data = str_replace('@TITLE@', $this->_module_info->getTitle(), $data);
-        $data = str_replace('@MODULE_ID@', $this->_module_info->getId(), $data);
+        $data = str_replace(
+            '@TITLE@', $this->_module_info->getTitle(), $data);
+
+        $data = str_replace(
+            '@MODULE_ID@', $this->_module_info->getId(), $data);
+
+        $data = str_replace(
+            '@REQUIRED_VERSION@',
+            $this->_module_info->getRequiredVersion(), $data);
 
         $description = wordwrap(
-            strip_tags($this->_module_info->getDescription()), 72
-        );
+            strip_tags($this->_module_info->getDescription()), 72);
         $data = str_replace('@DESCRIPTION@', $description, $data);
 
         return parent::_substituteTags($data);

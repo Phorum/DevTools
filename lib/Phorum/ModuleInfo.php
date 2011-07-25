@@ -193,7 +193,7 @@ class Phorum_ModuleInfo
 
                     case "require_version":
                     case "required_version":
-                        $this->required_version = $value;
+                        $this->_required_version = $value;
                         break;
 
                     case "category":
@@ -351,6 +351,16 @@ class Phorum_ModuleInfo
             "No version is set for the module."
         );
         return $this->_version;
+    }
+
+    /**
+     * Retrieve the required Phorum version.
+     *
+     * @return string
+     */
+    public function getRequiredVersion()
+    {
+        return $this->_required_version;
     }
 
     /**
