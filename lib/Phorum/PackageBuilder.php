@@ -493,8 +493,6 @@ abstract class Phorum_PackageBuilder
         $build_dir     = dirname($build_pkg_dir);
         $pkg_dir       = basename($build_pkg_dir);
 
-        $this->_log("Creating the package archive ...", 1);
-
         if (file_exists($output)) {
             if (!@unlink($output)) throw new Exception($php_errormsg);
         }
@@ -504,6 +502,7 @@ abstract class Phorum_PackageBuilder
         switch ($type)
         {
             case PHORUM_TARGZ_ARCHIVE:
+                $this->_log("Creating .tar.gz package archive ...", 1);
                 system("tar -C $build_dir -zcf $output $pkg_dir", $exit);
                 if ($exit != 0) throw new Exception(
                     "The tar program exited with a non-zero exit code."
@@ -511,6 +510,7 @@ abstract class Phorum_PackageBuilder
                 break;
 
             case PHORUM_ZIP_ARCHIVE:
+                $this->_log("Creating .zip package archive ...", 1);
                 system("cd $build_dir; zip -qr $output $pkg_dir", $exit);
                 if ($exit != 0) throw new Exception(
                     "The zip program exited with a non-zero exit code."
