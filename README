@@ -2,8 +2,6 @@ Phorum development tools
 ----------------------------------------------------------------------
 
 This repository holds tools that are useful to Phorum coders.
-Currently, only one finished tool is available, but there will be
-more in the future.
 
  * build_phorum_module
 
@@ -23,6 +21,12 @@ more in the future.
    @TITLE@        the title from info.txt
    @DESCRIPTION@  the description from info.txt, word wrapped at 72 chars,
                   stripped HTML tags
+
+ * clone_all_repositories
+
+   A tool to create a git clone of all git.com Phorum repositories
+   in a local directory. Repositories for which the target directory
+   already exists, are skipped during processing.
 
 
 System requirements for using the tools (the names that were used
