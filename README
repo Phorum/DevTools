@@ -24,3 +24,12 @@ more in the future.
    @DESCRIPTION@  the description from info.txt, word wrapped at 72 chars,
                   stripped HTML tags
 
+
+System requirements for using the tools (the names that were used
+are Ubuntu package names):
+
+ * php5-cli
+ * php5-curl
+ * zip
+ * git
+

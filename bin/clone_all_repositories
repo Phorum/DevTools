@@ -1,0 +1,94 @@
+#!/usr/bin/env php
+<?php
+
+require_once dirname(__FILE__) . '/../lib/Phorum/Git.php';
+
+// ----------------------------------------------------------------------
+// Parse arguments
+// ----------------------------------------------------------------------
+
+$args = array();
+
+$verbose = FALSE;
+$export_dir = "/tmp";
+
+for ($i = 1; $i < $_SERVER['argc']; $i++)
+{
+    $opt = $_SERVER['argv'][$i];
+
+    // Process options.
+    switch ($opt)
+    {
+        case "-h":
+            usage();
+            exit;
+            break;
+
+        case "-v":
+            $verbose = TRUE;
+            break;
+
+        case "-d":
+            if (!isset($_SERVER['argv'][++$i])) {
+                die("Missing value for option -d!\n");
+            }
+            $export_dir = $_SERVER['argv'][$i];
+            if (!is_dir($export_dir)) {
+                die("$export_dir: export dir does not exist");
+            }
+            break;
+
+        default:
+            die("Unknown option: $opt\n");
+    }
+}
+
+// ----------------------------------------------------------------------
+// Export the Phorum repositories
+// ----------------------------------------------------------------------
+
+try
+{
+    if ($verbose) print "> Retrieving repository list ...\n";
+    $git = new Phorum_Git();
+    $repos= $git->getRepositories();
+    if ($verbose) print "> Number of repositories: " . count($repos) . "\n";
+
+    if ($verbose) print "> Cloning repositories ...\n";
+    foreach ($repos as $r)
+    {
+        if ($verbose) print "----- $r->name -----\n";
+
+        if (is_dir("$export_dir/$r->name"))
+        {
+            if ($verbose) print "SKIP, target already exists\n"; 
+        }
+        else
+        {
+            $ssh = "git@github.com:Phorum/" . escapeshellarg($r->name) . ".git";
+            system("cd $export_dir; git clone $ssh");
+        }
+    }
+}
+catch (Exception $e)
+{
+    die("Error: " . $e->getMessage() . "\n");
+}
+
+// ----------------------------------------------------------------------
+// Utility functions
+// ----------------------------------------------------------------------
+
+function usage()
+{
+    $program = basename($_SERVER['argv'][0]);
+
+    print "\n";
+    print "Usage: $program [OPTIONS]\n";
+    print "\n";
+    print "   -h           : Show this help.\n";
+    print "   -v           : Enable verbose output.\n";
+    print "   -d <path>    : The directory for cloning the Phorum git\n";
+    print "                  repositories to. By default, /tmp is used.\n";
+    print "\n";
+}
