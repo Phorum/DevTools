@@ -28,6 +28,7 @@ foreach($map as $type => $extension) {
     $fp = fopen ($downloadsFolder . '/'.$release->tag_name.'.'.$extension, 'w+');//This is the file where we save the    information
     $ch = curl_init($release->{$type.'_url'});//Here is the file we are downloading, replace spaces with %20
     curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+    curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
     curl_setopt($ch, CURLOPT_FILE, $fp); // write curl response to file
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_exec($ch); // get curl response
